@@ -1,0 +1,23 @@
+services:
+  confluence-dc-mcp:
+    build: .
+    image: confluence-dc-mcp:latest
+    env_file:
+      - .env
+    volumes:
+      - ~/.confluence-dc-mcp:/root/.confluence-dc-mcp
+    stdin_open: true
+    tty: true
+
+  confluence-dc-mcp-http:
+    build: .
+    image: confluence-dc-mcp:latest
+    env_file:
+      - .env
+    environment:
+      CONFLUENCE_DC_MCP_TRANSPORT: http
+      CONFLUENCE_DC_MCP_PORT: "3000"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ~/.confluence-dc-mcp:/root/.confluence-dc-mcp
