@@ -95,7 +95,7 @@ fn register_vec_extension() {
 }
 
 /// Opens `mcp_store.db` read-only: this crate's binaries only ever read
-/// it, except `populate-embeddings` (a separate `[[bin]]`), which uses
+/// it, except `confluence-dc-mcp-populate-embeddings` (a separate `[[bin]]`), which uses
 /// `open_store_read_write` instead.
 pub fn open_store(path: &Path) -> Result<Connection> {
     register_vec_extension();
@@ -119,7 +119,7 @@ pub fn open_store_read_write(path: &Path) -> Result<Connection> {
 /// SQLite's backup API), then drops the on-disk connection immediately —
 /// so its file handle/lock is held only for that brief copy, not for the
 /// process's lifetime. This means an external process (a fresh
-/// `populate-embeddings` run, a deployment replacing the file) can update
+/// `confluence-dc-mcp-populate-embeddings` run, a deployment replacing the file) can update
 /// `mcp_store.db` without hitting "database is locked" against a live
 /// server, at the cost of the running process only picking up such an
 /// update on its next restart.
