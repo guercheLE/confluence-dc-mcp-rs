@@ -18,51 +18,7 @@ const KNOWN_VERSIONS: &[VersionRow] = &[
         is_default: true,
     },
     VersionRow {
-        label: "10.2.13",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.2.11",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.2.10",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.2.7",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.2.6",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.2.3",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.2.2",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.2.1",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.2.0",
-        is_default: false,
-    },
-    VersionRow {
         label: "10.1.2",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.1.1",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.1.0",
         is_default: false,
     },
     VersionRow {
@@ -70,27 +26,7 @@ const KNOWN_VERSIONS: &[VersionRow] = &[
         is_default: false,
     },
     VersionRow {
-        label: "10.0.2",
-        is_default: false,
-    },
-    VersionRow {
-        label: "10.0.1",
-        is_default: false,
-    },
-    VersionRow {
         label: "9.5.4",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.5.3",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.5.2",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.5.1",
         is_default: false,
     },
     VersionRow {
@@ -103,78 +39,6 @@ const KNOWN_VERSIONS: &[VersionRow] = &[
     },
     VersionRow {
         label: "9.2.21",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.20",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.19",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.17",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.15",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.14",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.13",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.12",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.11",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.10",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.9",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.8",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.7",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.6",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.5",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.4",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.3",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.2",
-        is_default: false,
-    },
-    VersionRow {
-        label: "9.2.1",
         is_default: false,
     },
 ];

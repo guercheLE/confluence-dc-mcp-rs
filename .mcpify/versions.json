@@ -11,77 +11,11 @@
       "source": "https://dac-static.atlassian.com/server/confluence/10.2.14.swagger.v3.json",
       "added_at": 1783259793
     },
-    "10.2.13": {
-      "db_file": "mcp_store_v10.2.13.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.13.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.13.swagger.v3.json",
-      "added_at": 1783259794
-    },
-    "10.2.11": {
-      "db_file": "mcp_store_v10.2.11.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.11.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.11.swagger.v3.json",
-      "added_at": 1783259796
-    },
-    "10.2.10": {
-      "db_file": "mcp_store_v10.2.10.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.10.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.10.swagger.v3.json",
-      "added_at": 1783259797
-    },
-    "10.2.7": {
-      "db_file": "mcp_store_v10.2.7.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.7.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.7.swagger.v3.json",
-      "added_at": 1783259798
-    },
-    "10.2.6": {
-      "db_file": "mcp_store_v10.2.6.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.6.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.6.swagger.v3.json",
-      "added_at": 1783259800
-    },
-    "10.2.3": {
-      "db_file": "mcp_store_v10.2.3.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.3.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.3.swagger.v3.json",
-      "added_at": 1783259801
-    },
-    "10.2.2": {
-      "db_file": "mcp_store_v10.2.2.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.2.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.2.swagger.v3.json",
-      "added_at": 1783259802
-    },
-    "10.2.1": {
-      "db_file": "mcp_store_v10.2.1.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.1.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.1.swagger.v3.json",
-      "added_at": 1783259804
-    },
-    "10.2.0": {
-      "db_file": "mcp_store_v10.2.0.db",
-      "schemas_file": "src/validation/generated_schemas_v10.2.0.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.2.0.swagger.v3.json",
-      "added_at": 1783259805
-    },
     "10.1.2": {
       "db_file": "mcp_store_v10.1.2.db",
       "schemas_file": "src/validation/generated_schemas_v10.1.2.json.zst",
       "source": "https://dac-static.atlassian.com/server/confluence/10.1.2.swagger.v3.json",
       "added_at": 1783259807
-    },
-    "10.1.1": {
-      "db_file": "mcp_store_v10.1.1.db",
-      "schemas_file": "src/validation/generated_schemas_v10.1.1.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.1.1.swagger.v3.json",
-      "added_at": 1783259808
-    },
-    "10.1.0": {
-      "db_file": "mcp_store_v10.1.0.db",
-      "schemas_file": "src/validation/generated_schemas_v10.1.0.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.1.0.swagger.v3.json",
-      "added_at": 1783259809
     },
     "10.0.3": {
       "db_file": "mcp_store_v10.0.3.db",
@@ -89,41 +23,11 @@
       "source": "https://dac-static.atlassian.com/server/confluence/10.0.3.swagger.v3.json",
       "added_at": 1783259811
     },
-    "10.0.2": {
-      "db_file": "mcp_store_v10.0.2.db",
-      "schemas_file": "src/validation/generated_schemas_v10.0.2.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.0.2.swagger.v3.json",
-      "added_at": 1783259812
-    },
-    "10.0.1": {
-      "db_file": "mcp_store_v10.0.1.db",
-      "schemas_file": "src/validation/generated_schemas_v10.0.1.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/10.0.1.swagger.v3.json",
-      "added_at": 1783259813
-    },
     "9.5.4": {
       "db_file": "mcp_store_v9.5.4.db",
       "schemas_file": "src/validation/generated_schemas_v9.5.4.json.zst",
       "source": "https://dac-static.atlassian.com/server/confluence/9.5.4.swagger.v3.json",
       "added_at": 1783259815
-    },
-    "9.5.3": {
-      "db_file": "mcp_store_v9.5.3.db",
-      "schemas_file": "src/validation/generated_schemas_v9.5.3.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.5.3.swagger.v3.json",
-      "added_at": 1783259817
-    },
-    "9.5.2": {
-      "db_file": "mcp_store_v9.5.2.db",
-      "schemas_file": "src/validation/generated_schemas_v9.5.2.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.5.2.swagger.v3.json",
-      "added_at": 1783259818
-    },
-    "9.5.1": {
-      "db_file": "mcp_store_v9.5.1.db",
-      "schemas_file": "src/validation/generated_schemas_v9.5.1.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.5.1.swagger.v3.json",
-      "added_at": 1783259819
     },
     "9.4.1": {
       "db_file": "mcp_store_v9.4.1.db",
@@ -142,114 +46,6 @@
       "schemas_file": "src/validation/generated_schemas_v9.2.21.json.zst",
       "source": "https://dac-static.atlassian.com/server/confluence/9.2.21.swagger.v3.json",
       "added_at": 1783259822
-    },
-    "9.2.20": {
-      "db_file": "mcp_store_v9.2.20.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.20.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.20.swagger.v3.json",
-      "added_at": 1783259824
-    },
-    "9.2.19": {
-      "db_file": "mcp_store_v9.2.19.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.19.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.19.swagger.v3.json",
-      "added_at": 1783259825
-    },
-    "9.2.17": {
-      "db_file": "mcp_store_v9.2.17.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.17.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.17.swagger.v3.json",
-      "added_at": 1783259826
-    },
-    "9.2.15": {
-      "db_file": "mcp_store_v9.2.15.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.15.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.15.swagger.v3.json",
-      "added_at": 1783259827
-    },
-    "9.2.14": {
-      "db_file": "mcp_store_v9.2.14.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.14.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.14.swagger.v3.json",
-      "added_at": 1783259828
-    },
-    "9.2.13": {
-      "db_file": "mcp_store_v9.2.13.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.13.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.13.swagger.v3.json",
-      "added_at": 1783259829
-    },
-    "9.2.12": {
-      "db_file": "mcp_store_v9.2.12.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.12.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.12.swagger.v3.json",
-      "added_at": 1783259831
-    },
-    "9.2.11": {
-      "db_file": "mcp_store_v9.2.11.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.11.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.11.swagger.v3.json",
-      "added_at": 1783259832
-    },
-    "9.2.10": {
-      "db_file": "mcp_store_v9.2.10.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.10.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.10.swagger.v3.json",
-      "added_at": 1783259833
-    },
-    "9.2.9": {
-      "db_file": "mcp_store_v9.2.9.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.9.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.9.swagger.v3.json",
-      "added_at": 1783259834
-    },
-    "9.2.8": {
-      "db_file": "mcp_store_v9.2.8.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.8.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.8.swagger.v3.json",
-      "added_at": 1783259835
-    },
-    "9.2.7": {
-      "db_file": "mcp_store_v9.2.7.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.7.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.7.swagger.v3.json",
-      "added_at": 1783259836
-    },
-    "9.2.6": {
-      "db_file": "mcp_store_v9.2.6.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.6.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.6.swagger.v3.json",
-      "added_at": 1783259837
-    },
-    "9.2.5": {
-      "db_file": "mcp_store_v9.2.5.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.5.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.5.swagger.v3.json",
-      "added_at": 1783259838
-    },
-    "9.2.4": {
-      "db_file": "mcp_store_v9.2.4.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.4.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.4.swagger.v3.json",
-      "added_at": 1783259840
-    },
-    "9.2.3": {
-      "db_file": "mcp_store_v9.2.3.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.3.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.3.swagger.v3.json",
-      "added_at": 1783259841
-    },
-    "9.2.2": {
-      "db_file": "mcp_store_v9.2.2.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.2.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.2.swagger.v3.json",
-      "added_at": 1783259842
-    },
-    "9.2.1": {
-      "db_file": "mcp_store_v9.2.1.db",
-      "schemas_file": "src/validation/generated_schemas_v9.2.1.json.zst",
-      "source": "https://dac-static.atlassian.com/server/confluence/9.2.1.swagger.v3.json",
-      "added_at": 1783259843
     }
   }
 }
