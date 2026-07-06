@@ -65,6 +65,50 @@ const VERSION_STORE_FILES: &[(&str, &str)] = &[
     ("9.2.2", "mcp_store_v9.2.2.db"),
     ("9.2.1", "mcp_store_v9.2.1.db"),
 ];
+
+const VERSION_STORE_BYTES: &[(&str, &[u8])] = &[
+    ("10.2.14", include_bytes!("../../mcp_store.db")),
+    ("10.2.13", include_bytes!("../../mcp_store_v10.2.13.db")),
+    ("10.2.11", include_bytes!("../../mcp_store_v10.2.11.db")),
+    ("10.2.10", include_bytes!("../../mcp_store_v10.2.10.db")),
+    ("10.2.7", include_bytes!("../../mcp_store_v10.2.7.db")),
+    ("10.2.6", include_bytes!("../../mcp_store_v10.2.6.db")),
+    ("10.2.3", include_bytes!("../../mcp_store_v10.2.3.db")),
+    ("10.2.2", include_bytes!("../../mcp_store_v10.2.2.db")),
+    ("10.2.1", include_bytes!("../../mcp_store_v10.2.1.db")),
+    ("10.2.0", include_bytes!("../../mcp_store_v10.2.0.db")),
+    ("10.1.2", include_bytes!("../../mcp_store_v10.1.2.db")),
+    ("10.1.1", include_bytes!("../../mcp_store_v10.1.1.db")),
+    ("10.1.0", include_bytes!("../../mcp_store_v10.1.0.db")),
+    ("10.0.3", include_bytes!("../../mcp_store_v10.0.3.db")),
+    ("10.0.2", include_bytes!("../../mcp_store_v10.0.2.db")),
+    ("10.0.1", include_bytes!("../../mcp_store_v10.0.1.db")),
+    ("9.5.4", include_bytes!("../../mcp_store_v9.5.4.db")),
+    ("9.5.3", include_bytes!("../../mcp_store_v9.5.3.db")),
+    ("9.5.2", include_bytes!("../../mcp_store_v9.5.2.db")),
+    ("9.5.1", include_bytes!("../../mcp_store_v9.5.1.db")),
+    ("9.4.1", include_bytes!("../../mcp_store_v9.4.1.db")),
+    ("9.3.2", include_bytes!("../../mcp_store_v9.3.2.db")),
+    ("9.2.21", include_bytes!("../../mcp_store_v9.2.21.db")),
+    ("9.2.20", include_bytes!("../../mcp_store_v9.2.20.db")),
+    ("9.2.19", include_bytes!("../../mcp_store_v9.2.19.db")),
+    ("9.2.17", include_bytes!("../../mcp_store_v9.2.17.db")),
+    ("9.2.15", include_bytes!("../../mcp_store_v9.2.15.db")),
+    ("9.2.14", include_bytes!("../../mcp_store_v9.2.14.db")),
+    ("9.2.13", include_bytes!("../../mcp_store_v9.2.13.db")),
+    ("9.2.12", include_bytes!("../../mcp_store_v9.2.12.db")),
+    ("9.2.11", include_bytes!("../../mcp_store_v9.2.11.db")),
+    ("9.2.10", include_bytes!("../../mcp_store_v9.2.10.db")),
+    ("9.2.9", include_bytes!("../../mcp_store_v9.2.9.db")),
+    ("9.2.8", include_bytes!("../../mcp_store_v9.2.8.db")),
+    ("9.2.7", include_bytes!("../../mcp_store_v9.2.7.db")),
+    ("9.2.6", include_bytes!("../../mcp_store_v9.2.6.db")),
+    ("9.2.5", include_bytes!("../../mcp_store_v9.2.5.db")),
+    ("9.2.4", include_bytes!("../../mcp_store_v9.2.4.db")),
+    ("9.2.3", include_bytes!("../../mcp_store_v9.2.3.db")),
+    ("9.2.2", include_bytes!("../../mcp_store_v9.2.2.db")),
+    ("9.2.1", include_bytes!("../../mcp_store_v9.2.1.db")),
+];
 // mcpify:versions:end
 
 /// Resolves the active `api_version` (from the config cascade) to its
@@ -75,9 +119,16 @@ const VERSION_STORE_FILES: &[(&str, &str)] = &[
 ///
 /// Prefers a file by that name in the current working directory (the
 /// historical in-repo dev workflow); if it isn't there, falls back to the
-/// directory containing the running executable, so an installed binary
-/// invoked from an arbitrary cwd still finds its bundled `.db` files —
-/// mirroring `config_manager::load_config`'s install-dir fallback.
+/// directory containing the running executable (covers a binary
+/// deliberately deployed next to a copy of the `.db` files, e.g. in a
+/// container image); if that's not it either, falls back to the project
+/// checkout this binary was built from. That last one is the fallback
+/// that actually matters for `cargo install --path .`: cargo only ever
+/// copies the compiled binary into `~/.cargo/bin`, never the `.db` files
+/// sitting next to it in the checkout, so an installed binary invoked
+/// from an arbitrary cwd would otherwise never find them.
+/// `CARGO_MANIFEST_DIR` is resolved by `env!` at compile time, so it
+/// bakes in the absolute path of whatever checkout built this binary.
 pub fn resolve_store_path(api_version: &str) -> Result<PathBuf> {
     let file = VERSION_STORE_FILES
         .iter()
@@ -99,7 +150,43 @@ pub fn resolve_store_path(api_version: &str) -> Result<PathBuf> {
         }
     }
 
-    Ok(PathBuf::from(file))
+    let manifest_candidate = Path::new(env!("CARGO_MANIFEST_DIR")).join(file);
+    if manifest_candidate.exists() {
+        return Ok(manifest_candidate);
+    }
+
+    extract_embedded_store(api_version, file)
+}
+
+/// Last-resort fallback for `resolve_store_path`: writes this version's
+/// embedded bytes out to the OS temp dir and returns that path, so
+/// `open_store` still has a real file to open. Skips the write if a
+/// previous call (in this process or an earlier run) already extracted
+/// it — the embedded bytes for a given `api_version` never change within
+/// a single compiled binary, so the file only needs writing once.
+fn extract_embedded_store(api_version: &str, file: &str) -> Result<PathBuf> {
+    let bytes = VERSION_STORE_BYTES
+        .iter()
+        .find(|(label, _)| *label == api_version)
+        .map(|(_, bytes)| *bytes)
+        .with_context(|| format!("no embedded store data for api_version '{api_version}'"))?;
+
+    let mut dir = std::env::temp_dir();
+    dir.push(concat!(env!("CARGO_PKG_NAME"), "-store"));
+    std::fs::create_dir_all(&dir)
+        .with_context(|| format!("failed to create temp dir '{}'", dir.display()))?;
+
+    let path = dir.join(file);
+    if !path.exists() {
+        std::fs::write(&path, bytes).with_context(|| {
+            format!(
+                "failed to extract embedded store data to '{}'",
+                path.display()
+            )
+        })?;
+    }
+
+    Ok(path)
 }
 
 const ENDPOINT_COLUMNS: &str = "operation_id, path, method, summary, description, input_schema, output_schema, auth_scheme_ref";
