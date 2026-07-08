@@ -16,17 +16,19 @@ cargo build --release
 cargo run -- setup
 ```
 
-Interactively collects the API URL and the credentials your chosen auth method needs, then lets you persist them as a `.env` file, a `config.json` file, or a ready-to-run CLI invocation.
+Interactively collects the API URL and the credentials your chosen auth method needs (Basic or Personal Access Token), then lets you persist them as a `.env` file, a `config.json` file, or a ready-to-run CLI invocation. See `.env.example` for the environment-variable shape.
 
 ## Usage
 
 ### Terminal Client (default)
 
 ```bash
-confluence-dc-mcp search "create an issue"
+confluence-dc-mcp search "create an issue" --limit 5
 confluence-dc-mcp get <operationId>
-confluence-dc-mcp call <operationId> --some-arg value
+confluence-dc-mcp call <operationId> --args '{"some-arg": "value"}'
 ```
+
+Other terminal subcommands: `test-connection` (verify the configured URL/credentials are reachable), `config` (print the resolved configuration with secrets redacted), `version` (print the installed version), and `versions` (list the Confluence API spec versions this project ships a store for). Run `confluence-dc-mcp --help` for the full list.
 
 ### Harness Server
 
@@ -34,6 +36,61 @@ confluence-dc-mcp call <operationId> --some-arg value
 confluence-dc-mcp start                              # stdio transport (default)
 confluence-dc-mcp http --host 127.0.0.1 --port 3000  # HTTP transport
 ```
+
+### Docker
+
+```bash
+docker compose up confluence-dc-mcp        # stdio transport
+docker compose up confluence-dc-mcp-http   # HTTP transport, published on :3000
+```
+
+Requires a populated `.env` file (see Setup above). `docker-compose.yml` mounts `~/.confluence-dc-mcp` for persisted state.
+
+## Observability & Resilience
+
+Config resolves through a cascade — CLI flags > env vars > `./confluence-dc-mcp.config.yml` > `~/.confluence-dc-mcp/config.yml` > `/etc/confluence-dc-mcp/config.yml` > install-dir `config.yml` > built-in defaults. Every env var below can also be set as a same-named (lower-cased, unprefixed) key in any of those YAML files.
+
+### Logging
+
+Structured JSON logs on stderr (pretty-printed instead when stderr is an interactive TTY), gated by `tracing`'s `EnvFilter`:
+
+```bash
+CONFLUENCE_DC_MCP_LOG_LEVEL=debug confluence-dc-mcp start
+```
+
+Defaults to `info` when unset. Logging is only initialized for the Harness Server (`start`/`http`) — the terminal client subcommands (`search`/`get`/`call`/...) don't call `init_logging` at all. Secret redaction (`core/sanitizer.rs`, matching keys containing `password`, `token`, `secret`, `authorization`, `apikey`/`api_key`/`api-key`, `credential`) exists but is **not applied automatically to every log line** — today it's only wired into the `confluence-dc-mcp config` command's output. Anything else logged as raw JSON (e.g. request/response bodies) is not auto-redacted.
+
+### Tracing & Metrics
+
+OpenTelemetry traces export over OTLP/HTTP (`opentelemetry-otlp`) whenever the Harness Server starts. Destination and headers are **not** this project's own config — they're read from the standard OpenTelemetry SDK env vars, e.g.:
+
+```bash
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 confluence-dc-mcp start
+```
+
+If the exporter fails to build (e.g. malformed endpoint), tracing is silently disabled rather than failing startup. There's no separate metrics exporter: `GET /metrics` (HTTP transport only) serves a handful of in-process Prometheus-text counters (e.g. `http_requests_total`) from `http/metrics.rs`, not OTel metrics.
+
+### Resilience
+
+The outbound API client wraps every call in a rate limiter and a circuit breaker:
+
+```bash
+CONFLUENCE_DC_MCP_RATE_LIMIT=100      # requests/sec, sliding window (default 100)
+CONFLUENCE_DC_MCP_RETRY_ATTEMPTS=3    # retries on transient failure (default 3)
+CONFLUENCE_DC_MCP_TIMEOUT_MS=30000    # per-request timeout (default 30000)
+```
+
+The circuit breaker (opens after 5 consecutive failures, stays open 30s) is **hardcoded** (`CircuitBreaker::default()` in `services/api_client.rs`) — there's no env var or config key for its threshold or reset timeout.
+
+### Health Checks
+
+- `confluence-dc-mcp test-connection` — one-shot check from the terminal client that the configured URL/credentials are reachable.
+- Harness Server: registers a periodic check of the embedded store DB (interval 30s, 5s timeout — also **hardcoded** in `core/health_check_manager.rs`, no config knob). Over HTTP transport it's surfaced at `GET /healthz`, returning `503` when unhealthy.
+- `confluence-dc-mcp-healthcheck` — a separate, dependency-free binary wired into the Dockerfile's `HEALTHCHECK` instruction; it only checks that `mcp_store.db` exists and is readable, independent of `/healthz` or transport.
+
+### Credential Storage
+
+`setup` and every auth strategy persist/read secrets through the OS-native keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) via the `keyring` crate, under service name `confluence-dc-mcp`. When no keychain backend is available (common in minimal containers), it falls back automatically to an AES-256-GCM-encrypted file at `~/.confluence-dc-mcp/credentials.enc` (mode `0600`, directory `0700` on Unix), keyed from `$HOME` — there's no flag to force one path or the other; it's decided at runtime by keychain availability.
 
 ## Testing
 
@@ -55,6 +112,10 @@ cargo run --release --features profiling -- search "test query"   # heap profili
 ```
 
 `profile/bottleneck-report.md` combines coverage gaps with the hottest CPU functions in one small text file — paste it into an LLM (or hand it to another tool) to find and fix bottlenecks. Requires [samply](https://github.com/mstange/samply) (`cargo install samply`).
+
+## License
+
+MIT — see [LICENSE](LICENSE).
 
 ---
 
