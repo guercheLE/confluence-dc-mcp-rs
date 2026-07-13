@@ -25,10 +25,22 @@ Interactively collects the API URL and the credentials your chosen auth method n
 ### Terminal Client (default)
 
 ```bash
-confluence-dc-mcp search "create an issue" --limit 5
-confluence-dc-mcp get <operationId>
-confluence-dc-mcp call <operationId> --args '{"some-arg": "value"}'
+# 1. Semantic search over all 176 operations in the default Confluence store
+confluence-dc-mcp search "get content by ID" --limit 5
+
+# 2. Inspect the exact method, path, and input/output schemas before calling
+confluence-dc-mcp get getContentById
+# method: GET
+# path: /rest/api/content/{id}
+
+# 3. Path and query parameters are fields in one --args JSON object
+confluence-dc-mcp call getContentById --args '{"id":"123456","expand":"body.storage,version"}'
+
+# Request payloads are nested under body in that same object
+confluence-dc-mcp call createContent --args '{"body":{"type":"page","title":"Release notes","space":{"key":"DOC"},"body":{"storage":{"value":"<p>Ready to publish.</p>","representation":"storage"}}}}'
 ```
+
+`call` accepts one JSON object through `--args` (or `-a`), not arbitrary per-operation CLI flags. Use `get <operationId>` to see the accepted field names and which ones are required.
 
 Other terminal subcommands: `test-connection` (verify the configured URL/credentials are reachable), `config` (print the resolved configuration with secrets redacted), `version` (print the installed version), and `versions` (list the Confluence API spec versions this project ships a store for). Run `confluence-dc-mcp --help` for the full list.
 
