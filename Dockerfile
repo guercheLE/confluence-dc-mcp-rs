@@ -17,22 +17,13 @@ RUN apt-get update \
 
 COPY Cargo.toml Cargo.lock* ./
 COPY src ./src
-COPY mcp_store.db ./mcp_store.db
-# Every version's `.db`, not just the default `mcp_store.db` — `store.rs`'s
-# `VERSION_STORE_BYTES` embeds all of them via `include_bytes!`, so
-# `cargo build` fails below if any are missing from the build context.
-COPY mcp_store_v10.0.3.db ./mcp_store_v10.0.3.db
-COPY mcp_store_v10.1.2.db ./mcp_store_v10.1.2.db
-COPY mcp_store_v9.2.21.db ./mcp_store_v9.2.21.db
-COPY mcp_store_v9.3.2.db ./mcp_store_v9.3.2.db
-COPY mcp_store_v9.4.1.db ./mcp_store_v9.4.1.db
-COPY mcp_store_v9.5.4.db ./mcp_store_v9.5.4.db
-RUN cargo build --release
+# Include every current and future API version store in the build context.
+COPY mcp_store*.db ./
 
-# mcp_store.db leaves the Rust generator with an empty semantic_endpoints
-# table (vectors are computed here, not by mcpify itself — see the plan's
-# embeddings decision), so it must be populated before the image is usable.
-RUN ./target/release/confluence-dc-mcp-populate-embeddings
+# Populate every store before the final build so include_bytes! embeds vectors.
+RUN cargo build --locked --release --bin confluence-dc-mcp-populate-embeddings
+RUN ./target/release/confluence-dc-mcp-populate-embeddings --all
+RUN cargo build --locked --release
 
 # `fastembed`/`ort` (Story R6) may dynamically link an ONNX Runtime shared
 # library rather than statically linking it — if `cargo build --release`
@@ -49,7 +40,7 @@ RUN apt-get update \
 
 COPY --from=builder /app/target/release/confluence-dc-mcp ./confluence-dc-mcp
 COPY --from=builder /app/target/release/confluence-dc-mcp-healthcheck ./confluence-dc-mcp-healthcheck
-COPY --from=builder /app/mcp_store.db ./mcp_store.db
+COPY --from=builder /app/mcp_store*.db ./
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD ["./confluence-dc-mcp-healthcheck"]
 
