@@ -167,7 +167,19 @@ impl AuthManager {
         } else if let Some(header) = credentials.get("authorization_header") {
             headers.insert("Authorization".to_string(), header.clone());
         } else if let Some(api_key) = credentials.get("api_key") {
-            headers.insert("X-Api-Key".to_string(), api_key.clone());
+            // This deployment's discovered auth schemes (Basic, PAT) never
+            // populate "api_key"/"request_header_name" — there is no
+            // `AuthMethod::ApiKey` variant for Confluence Data Center, so
+            // this branch is presently unreachable in practice. Kept for
+            // structural parity with the other mcpify-generated Rust
+            // servers that do have an api_key scheme: honor the scheme's
+            // real configured header name (via "request_header_name", the
+            // same key checked above) instead of hardcoding "X-Api-Key".
+            let header_name = credentials
+                .get("request_header_name")
+                .cloned()
+                .unwrap_or_else(|| "X-Api-Key".to_string());
+            headers.insert(header_name, api_key.clone());
         }
         Ok(headers)
     }
