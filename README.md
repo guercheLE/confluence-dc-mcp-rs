@@ -76,6 +76,46 @@ confluence-dc-mcp start                              # stdio transport (default)
 confluence-dc-mcp http --host 127.0.0.1 --port 3000  # HTTP transport
 ```
 
+### Connect an MCP client
+
+**stdio:** after running `confluence-dc-mcp setup`, configure an MCP host to spawn the server. Include the connection settings printed by the wizard:
+
+```json
+{
+  "mcpServers": {
+    "confluence-dc-mcp": {
+      "command": "confluence-dc-mcp",
+      "args": ["start"],
+      "env": {
+        "CONFLUENCE_DC_MCP_URL": "<your target API URL>",
+        "CONFLUENCE_DC_MCP_AUTH_METHOD": "basic",
+        "CONFLUENCE_DC_MCP_API_VERSION": "10.2.14",
+        "CONFLUENCE_DC_MCP_TRANSPORT": "stdio"
+      }
+    }
+  }
+}
+```
+
+Use the absolute executable path if `confluence-dc-mcp` is not on the MCP host's `PATH`. The stdio server reads the connection settings from this `env` block and uses the credentials saved by `setup`.
+
+**HTTP:** every request must carry its own `Authorization` header — HTTP transport intentionally does not fall back to credentials stored on the server:
+
+```json
+{
+  "mcpServers": {
+    "confluence-dc-mcp": {
+      "url": "http://127.0.0.1:3000/mcp",
+      "headers": {
+        "Authorization": "<credential value>"
+      }
+    }
+  }
+}
+```
+
+Keep the listener on localhost unless you have added appropriate network access controls and TLS in front of it.
+
 ## Docker
 
 ```bash
