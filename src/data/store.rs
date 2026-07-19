@@ -34,13 +34,13 @@ pub const VERSION_STORE_FILES: &[(&str, &str)] = &[
 ];
 
 const VERSION_STORE_BYTES: &[(&str, &[u8])] = &[
-    ("10.2.14", include_bytes!("../../mcp_store.db")),
-    ("10.1.2", include_bytes!("../../mcp_store_v10.1.2.db")),
-    ("10.0.3", include_bytes!("../../mcp_store_v10.0.3.db")),
-    ("9.5.4", include_bytes!("../../mcp_store_v9.5.4.db")),
-    ("9.4.1", include_bytes!("../../mcp_store_v9.4.1.db")),
-    ("9.3.2", include_bytes!("../../mcp_store_v9.3.2.db")),
-    ("9.2.21", include_bytes!("../../mcp_store_v9.2.21.db")),
+    ("10.2.14", include_bytes!("../../mcp_store.db.zst")),
+    ("10.1.2", include_bytes!("../../mcp_store_v10.1.2.db.zst")),
+    ("10.0.3", include_bytes!("../../mcp_store_v10.0.3.db.zst")),
+    ("9.5.4", include_bytes!("../../mcp_store_v9.5.4.db.zst")),
+    ("9.4.1", include_bytes!("../../mcp_store_v9.4.1.db.zst")),
+    ("9.3.2", include_bytes!("../../mcp_store_v9.3.2.db.zst")),
+    ("9.2.21", include_bytes!("../../mcp_store_v9.2.21.db.zst")),
 ];
 // mcpify:versions:end
 
@@ -93,13 +93,20 @@ pub fn resolve_store_path(api_version: &str) -> Result<PathBuf> {
     // the same directory is atomic on both POSIX and Windows, so every
     // reader sees either the complete previous copy or the complete new
     // one, never a partial write.
+    //
+    // `bytes` is the zstd-compressed `.db.zst` payload (see
+    // `VERSION_STORE_BYTES`), not a valid SQLite file itself — it must be
+    // decompressed before `rusqlite::Connection::open` can read it.
+    let decompressed = zstd::stream::decode_all(bytes).with_context(|| {
+        format!("failed to decompress embedded store data for api_version '{api_version}'")
+    })?;
     static UNIQUE: AtomicU64 = AtomicU64::new(0);
     let tmp_path = dir.join(format!(
         "{file}.{}.{}.tmp",
         std::process::id(),
         UNIQUE.fetch_add(1, Ordering::Relaxed)
     ));
-    std::fs::write(&tmp_path, bytes).with_context(|| {
+    std::fs::write(&tmp_path, decompressed).with_context(|| {
         format!(
             "failed to extract embedded store data to '{}'",
             tmp_path.display()

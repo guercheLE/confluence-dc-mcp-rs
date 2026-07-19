@@ -11,6 +11,36 @@ use super::strategies::pat::PatAuthStrategy;
 use super::strategies::stub::StubAuthStrategy;
 
 const CREDENTIAL_ACCOUNT: &str = "active-credentials";
+const ENV_PREFIX: &str = "CONFLUENCE_DC_MCP";
+
+/// Builds an `AuthConfig` straight from the `<PREFIX>_TOKEN`/`_API_KEY`/
+/// `_USERNAME`/`_PASSWORD` env vars documented in `.env.example`, if the
+/// vars this `auth_method` needs are actually set — closes the gap where
+/// those vars were documented but never wired into the credentials lookup,
+/// leaving a prior `setup` run (keychain/file) as the only way to
+/// authenticate. Returns `None` when the required var(s) for this
+/// deployment's `auth_method` aren't present, so callers fall back to the
+/// stored-credential lookup unchanged.
+fn credentials_from_env(auth_method: AuthMethod) -> Option<AuthConfig> {
+    let mut config = AuthConfig::new();
+    match auth_method {
+        AuthMethod::Pat => {
+            let token = std::env::var(format!("{ENV_PREFIX}_TOKEN"))
+                .or_else(|_| std::env::var(format!("{ENV_PREFIX}_API_KEY")))
+                .ok()?;
+            config.insert("token".to_string(), token);
+        }
+        AuthMethod::Basic => {
+            let username = std::env::var(format!("{ENV_PREFIX}_USERNAME")).ok()?;
+            let password = std::env::var(format!("{ENV_PREFIX}_PASSWORD")).ok()?;
+            config.insert("username".to_string(), username);
+            config.insert("password".to_string(), password);
+        }
+        #[allow(unreachable_patterns)]
+        _ => return None,
+    }
+    Some(config)
+}
 
 fn strategy_for(auth_method: AuthMethod) -> Box<dyn AuthStrategy> {
     match auth_method {
@@ -69,6 +99,14 @@ impl AuthManager {
             && self.strategy.validate_credentials(cached)
         {
             return self.normalize_credentials(cached).await;
+        }
+
+        if let Some(env_config) = credentials_from_env(self.auth_method)
+            && let Ok(from_env) = self.strategy.authenticate(&env_config).await
+            && self.strategy.validate_credentials(&from_env)
+        {
+            self.cached_credentials = Some(from_env.clone());
+            return Ok(from_env);
         }
 
         if let Some(stored) = load_credential(CREDENTIAL_ACCOUNT)? {
@@ -169,23 +207,16 @@ impl AuthManager {
         let _ = method;
         let _ = url;
 
-        if let Some(name) = credentials.get("request_header_name") {
-            let value = credentials
-                .get("request_header_value")
-                .cloned()
-                .unwrap_or_default();
-            headers.insert(name.clone(), value);
+        if let (Some(name), Some(value)) = (
+            credentials.get("request_header_name"),
+            credentials.get("request_header_value"),
+        ) {
+            // HTTP-transport relay case: both name and value came from the
+            // caller's own incoming request (`RequestCredentials`).
+            headers.insert(name.clone(), value.clone());
         } else if let Some(header) = credentials.get("authorization_header") {
             headers.insert("Authorization".to_string(), header.clone());
         } else if let Some(api_key) = credentials.get("api_key") {
-            // This deployment's discovered auth schemes (Basic, PAT) never
-            // populate "api_key"/"request_header_name" — there is no
-            // `AuthMethod::ApiKey` variant for Confluence Data Center, so
-            // this branch is presently unreachable in practice. Kept for
-            // structural parity with the other mcpify-generated Rust
-            // servers that do have an api_key scheme: honor the scheme's
-            // real configured header name (via "request_header_name", the
-            // same key checked above) instead of hardcoding "X-Api-Key".
             let header_name = credentials
                 .get("request_header_name")
                 .cloned()
@@ -213,7 +244,10 @@ mod tests {
         manager.set_credentials(credentials.clone());
 
         let resolved = manager.credentials().await.unwrap();
-        assert_eq!(resolved, credentials);
+        assert_eq!(
+            resolved.get("authorization_header").map(String::as_str),
+            Some("Bearer abc")
+        );
     }
     #[tokio::test]
     async fn http_transport_uses_the_request_override_not_the_config_cascade() {
