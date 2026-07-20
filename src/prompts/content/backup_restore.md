@@ -1,7 +1,7 @@
 # Confluence workflow: backup & restore
 
 This sub-workflow is designed to be run as an isolated sub-task where
-possible -- if delegated here from `confluence_workflow`'s routing, or your
+possible -- if delegated here from `confluence`'s routing, or your
 environment otherwise supports it, everything you need is in this
 prompt's own text plus the parameters already listed above; report back
 only a short summary when done.
@@ -54,5 +54,5 @@ affects every pending job, not just the user's own.
 ## Composing with other workflows
 
 Restoring into a specific space may interact with that space's existing
-content -- see `confluence_workflow_spaces` and `confluence_workflow_content`
+content -- see `confluence-spaces` and `confluence-content`
 for how to inspect what's there beforehand.

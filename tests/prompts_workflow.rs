@@ -54,43 +54,41 @@ async fn prompts_list_and_get_round_trip_over_the_wire() -> anyhow::Result<()> {
     });
     let client = TestClient.serve(client_transport).await?;
 
-    // `prompts/list` shape: all 15 confluence_workflow* prompts are advertised.
+    // `prompts/list` shape: all 15 confluence* prompts are advertised.
     let prompts = client.list_all_prompts().await?;
     let mut names: Vec<&str> = prompts.iter().map(|p| p.name.as_ref()).collect();
     names.sort_unstable();
     let expected = {
         let mut expected = vec![
-            "confluence_workflow",
-            "confluence_workflow_admin_diagnostics",
-            "confluence_workflow_attachments",
-            "confluence_workflow_backup_restore",
-            "confluence_workflow_content",
-            "confluence_workflow_labels",
-            "confluence_workflow_permissions_restrictions",
-            "confluence_workflow_properties",
-            "confluence_workflow_search_cql",
-            "confluence_workflow_space_provisioning",
-            "confluence_workflow_spaces",
-            "confluence_workflow_user_lifecycle",
-            "confluence_workflow_users_groups",
-            "confluence_workflow_watches",
-            "confluence_workflow_webhooks",
+            "confluence",
+            "confluence-admin-diagnostics",
+            "confluence-attachments",
+            "confluence-backup-restore",
+            "confluence-content",
+            "confluence-labels",
+            "confluence-permissions-restrictions",
+            "confluence-properties",
+            "confluence-search-cql",
+            "confluence-space-provisioning",
+            "confluence-spaces",
+            "confluence-user-lifecycle",
+            "confluence-users-groups",
+            "confluence-watches",
+            "confluence-webhooks",
         ];
         expected.sort_unstable();
         expected
     };
     assert_eq!(names, expected);
     assert!(
-        names
-            .iter()
-            .all(|name| name.starts_with("confluence_workflow")),
-        "every advertised prompt should share the confluence_workflow* prefix, got {names:?}"
+        names.iter().all(|name| name.starts_with("confluence")),
+        "every advertised prompt should share the confluence* prefix, got {names:?}"
     );
 
     let restrictions_prompt = prompts
         .iter()
-        .find(|p| p.name == "confluence_workflow_permissions_restrictions")
-        .expect("confluence_workflow_permissions_restrictions should be advertised");
+        .find(|p| p.name == "confluence-permissions-restrictions")
+        .expect("confluence-permissions-restrictions should be advertised");
     let arguments = restrictions_prompt
         .arguments
         .as_ref()
@@ -114,22 +112,21 @@ async fn prompts_list_and_get_round_trip_over_the_wire() -> anyhow::Result<()> {
 
     // `prompts/get` round-trip: the master menu links to the worked-example sub-workflow.
     let master = client
-        .get_prompt(GetPromptRequestParams::new("confluence_workflow"))
+        .get_prompt(GetPromptRequestParams::new("confluence"))
         .await?;
     let master_text = message_text(&master.messages[0]);
-    assert!(master_text.contains("confluence_workflow_permissions_restrictions"));
+    assert!(master_text.contains("confluence-permissions-restrictions"));
 
     // `prompts/get` round-trip with partial arguments: the rendered header
     // echoes what was supplied and lists what's still missing.
     let restrictions = client
         .get_prompt(
-            GetPromptRequestParams::new("confluence_workflow_permissions_restrictions")
-                .with_arguments(
-                    serde_json::json!({ "content_id": "123456" })
-                        .as_object()
-                        .unwrap()
-                        .clone(),
-                ),
+            GetPromptRequestParams::new("confluence-permissions-restrictions").with_arguments(
+                serde_json::json!({ "content_id": "123456" })
+                    .as_object()
+                    .unwrap()
+                    .clone(),
+            ),
         )
         .await?;
     let restrictions_text = message_text(&restrictions.messages[0]);

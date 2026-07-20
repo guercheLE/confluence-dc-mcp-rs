@@ -1,7 +1,7 @@
 # Confluence workflow: space provisioning
 
 This sub-workflow is designed to be run as an isolated sub-task where
-possible -- if delegated here from `confluence_workflow`'s routing, or
+possible -- if delegated here from `confluence`'s routing, or
 your environment otherwise supports it, everything you need is in this
 prompt's own text plus the parameters already listed above; report back
 only a short summary when done.
@@ -35,7 +35,7 @@ until the space is confirmed to exist.
 
 ## Step 3 -- initial permissions
 
-Delegate to `confluence_workflow_permissions_restrictions` for granting
+Delegate to `confluence-permissions-restrictions` for granting
 the right groups/users access to the new space -- don't duplicate that
 read-merge-write-verify logic here. Gate: don't consider the space ready
 for its team until those permissions are confirmed granted by re-reading
@@ -44,12 +44,12 @@ them, not just because the grant call didn't error.
 ## Step 4 -- categorize (optional)
 
 If the user wants the space discoverable under a category, delegate to
-`confluence_workflow_labels` for adding a space category/label.
+`confluence-labels` for adding a space category/label.
 
 ## Step 5 -- seed initial content (optional)
 
 If the user wants a starter home page or initial structure, delegate to
-`confluence_workflow_content` for creating that content -- the new
+`confluence-content` for creating that content -- the new
 space's home page already exists once the space is created, so this step
 is about adding *additional* structure, not replacing the auto-created
 home page unless the user explicitly asks to edit it.

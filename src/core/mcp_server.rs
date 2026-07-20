@@ -218,7 +218,7 @@ impl ServerHandler for McpifyServer {
         .with_instructions(
             "Exposes exactly 3 tools -- search, get, call -- backed by an embedded \
              semantic database, so you never need the full API surface in context. \
-             Also exposes MCP prompts -- start with the `confluence_workflow` prompt \
+             Also exposes MCP prompts -- start with the `confluence` prompt \
              for guided, multi-step help with common Confluence Data Center tasks."
                 .to_string(),
         )

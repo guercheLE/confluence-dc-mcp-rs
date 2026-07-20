@@ -15,14 +15,14 @@ use crate::prompts::{
 #[prompt_router(vis = "pub(crate)")]
 impl McpifyServer {
     #[prompt(
-        name = "confluence_workflow",
+        name = "confluence",
         description = "Start here. Presents the available Confluence Data Center management \
                         workflows, routes to the right guided sub-workflow based on the user's \
                         goal, and -- where the environment supports it -- delegates that whole \
                         sub-workflow to an isolated sub-task to spare this conversation's \
                         context window."
     )]
-    async fn confluence_workflow_prompt(
+    async fn confluence_prompt(
         &self,
         Parameters(args): Parameters<MasterWorkflowArgs>,
     ) -> Vec<PromptMessage> {
@@ -34,13 +34,13 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_permissions_restrictions",
+        name = "confluence-permissions-restrictions",
         description = "Guided setup of content-level view/update restrictions vs. \
                         space-level (or global) permission grants, including the \
                         read-before-write merge required by restrictions' replace-all \
                         semantics."
     )]
-    async fn confluence_workflow_permissions_restrictions_prompt(
+    async fn confluence_permissions_restrictions_prompt(
         &self,
         Parameters(args): Parameters<PermissionsRestrictionsArgs>,
     ) -> Vec<PromptMessage> {
@@ -60,11 +60,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_spaces",
+        name = "confluence-spaces",
         description = "Space lifecycle: create (regular/private/personal), get/update/delete, \
                         archive, restore, trash, categories, per-space color scheme."
     )]
-    async fn confluence_workflow_spaces_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_spaces_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/spaces.md"),
@@ -72,12 +72,12 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_content",
+        name = "confluence-content",
         description = "Pages/blog posts: create (top-level vs child vs blueprint draft), \
                         get/update/delete, hierarchy (children/descendants), history, \
                         comments (as a content type), body-format conversion."
     )]
-    async fn confluence_workflow_content_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_content_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/content.md"),
@@ -85,11 +85,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_attachments",
+        name = "confluence-attachments",
         description = "Upload/list/update/delete attachments, versions, extracted text, \
                         move between content."
     )]
-    async fn confluence_workflow_attachments_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_attachments_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/attachments.md"),
@@ -97,11 +97,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_labels",
+        name = "confluence-labels",
         description = "List/add/delete labels on content and spaces, popular/recent/related \
                         labels."
     )]
-    async fn confluence_workflow_labels_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_labels_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/labels.md"),
@@ -109,11 +109,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_properties",
+        name = "confluence-properties",
         description = "Generic key/value metadata CRUD, both on content and on spaces (same \
                         shape, parallel endpoint families)."
     )]
-    async fn confluence_workflow_properties_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_properties_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/properties.md"),
@@ -121,11 +121,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_users_groups",
+        name = "confluence-users-groups",
         description = "User lifecycle (incl. site-admin provisioning), group lifecycle and \
                         membership (nested/ancestor/parent), user-group assignment."
     )]
-    async fn confluence_workflow_users_groups_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_users_groups_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/users_groups.md"),
@@ -133,11 +133,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_search_cql",
+        name = "confluence-search-cql",
         description = "CQL content search vs general entity search, query construction \
                         guidance, pagination."
     )]
-    async fn confluence_workflow_search_cql_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_search_cql_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/search_cql.md"),
@@ -145,11 +145,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_watches",
+        name = "confluence-watches",
         description = "Content and space watch subscriptions (check/add/remove, per-resource \
                         watcher listing)."
     )]
-    async fn confluence_workflow_watches_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_watches_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/watches.md"),
@@ -157,11 +157,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_backup_restore",
+        name = "confluence-backup-restore",
         description = "Site- or space-scoped definitions backup/restore, async job creation, \
                         polling job status, downloading the result."
     )]
-    async fn confluence_workflow_backup_restore_prompt(
+    async fn confluence_backup_restore_prompt(
         &self,
         Parameters(args): Parameters<BackupRestoreArgs>,
     ) -> Vec<PromptMessage> {
@@ -176,11 +176,11 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_webhooks",
+        name = "confluence-webhooks",
         description = "Webhook lifecycle: create, test, inspect invocation \
                         history/statistics, update, delete."
     )]
-    async fn confluence_workflow_webhooks_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_webhooks_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/webhooks.md"),
@@ -188,12 +188,12 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_admin_diagnostics",
+        name = "confluence-admin-diagnostics",
         description = "Thin pointer to the right read-only or maintenance signal \
                         (reindex/unindex, cluster node status, audit records, access mode, \
                         instance metrics, server information, global color scheme)."
     )]
-    async fn confluence_workflow_admin_diagnostics_prompt(&self) -> Vec<PromptMessage> {
+    async fn confluence_admin_diagnostics_prompt(&self) -> Vec<PromptMessage> {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/admin_diagnostics.md"),
@@ -201,12 +201,12 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_space_provisioning",
+        name = "confluence-space-provisioning",
         description = "Guided end-to-end setup of a new team space: create (regular/private/\
                         personal fork), grant initial permissions, categorize, optionally \
                         seed a home page."
     )]
-    async fn confluence_workflow_space_provisioning_prompt(
+    async fn confluence_space_provisioning_prompt(
         &self,
         Parameters(args): Parameters<SpaceProvisioningArgs>,
     ) -> Vec<PromptMessage> {
@@ -224,12 +224,12 @@ impl McpifyServer {
     }
 
     #[prompt(
-        name = "confluence_workflow_user_lifecycle",
+        name = "confluence-user-lifecycle",
         description = "Onboard (check-then-create, group membership, permissions, watch) or \
                         offboard (disable, remove from groups, revoke permissions) a user -- \
                         an explicit fork on direction."
     )]
-    async fn confluence_workflow_user_lifecycle_prompt(
+    async fn confluence_user_lifecycle_prompt(
         &self,
         Parameters(args): Parameters<UserLifecycleArgs>,
     ) -> Vec<PromptMessage> {

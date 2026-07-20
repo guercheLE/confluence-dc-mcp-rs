@@ -1,7 +1,7 @@
 # Confluence workflow: permissions & restrictions
 
 This sub-workflow is designed to be run as an isolated sub-task where possible —
-if you were delegated here from `confluence_workflow`'s routing, or your
+if you were delegated here from `confluence`'s routing, or your
 environment otherwise supports running this as its own sub-task, everything
 you need is in this prompt's own text plus the parameters already listed
 above; report back only a short summary when done rather than the full
@@ -71,7 +71,7 @@ in Step 1 -- it is its own must-not-guess gotcha, independent from path A's.
 
 ## Composing with other workflows
 
-Identifying the target page or space overlaps with `confluence_workflow_content`
-and `confluence_workflow_spaces` -- fetch those prompts by name for more
+Identifying the target page or space overlaps with `confluence-content`
+and `confluence-spaces` -- fetch those prompts by name for more
 detail on locating or creating the resource itself rather than duplicating
 that here.

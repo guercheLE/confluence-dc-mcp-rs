@@ -1,7 +1,7 @@
 # Confluence workflow: user onboarding & offboarding
 
 This sub-workflow is designed to be run as an isolated sub-task where
-possible -- if delegated here from `confluence_workflow`'s routing, or
+possible -- if delegated here from `confluence`'s routing, or
 your environment otherwise supports it, everything you need is in this
 prompt's own text plus the parameters already listed above; report back
 only a short summary when done.
@@ -28,14 +28,14 @@ account exists.
 
 ## Step 3 (onboarding) -- group membership
 
-Delegate to `confluence_workflow_users_groups` for adding the user to
+Delegate to `confluence-users-groups` for adding the user to
 whichever group(s) the user's role requires. Verify by re-reading the
 group's membership afterward.
 
 ## Step 4 (onboarding) -- permissions and watches
 
-Delegate to `confluence_workflow_permissions_restrictions` for granting
-space-level access, and optionally to `confluence_workflow_watches` for
+Delegate to `confluence-permissions-restrictions` for granting
+space-level access, and optionally to `confluence-watches` for
 subscribing the new user to a relevant space. Gate: don't report
 onboarding as complete until the permission grant is confirmed by
 re-reading it, not just because the grant call didn't error.
@@ -49,8 +49,8 @@ reversible, deletion typically is not.
 
 ## Step 6 (offboarding) -- remove memberships and revoke access
 
-Delegate to `confluence_workflow_users_groups` for removing the user from
-their groups, then to `confluence_workflow_permissions_restrictions` for
+Delegate to `confluence-users-groups` for removing the user from
+their groups, then to `confluence-permissions-restrictions` for
 explicitly revoking any space/content permissions granted directly to
 this user (not just relying on group removal, since directly-granted
 permissions can outlive group membership). Remember that revoking

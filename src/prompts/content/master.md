@@ -22,20 +22,20 @@ schema `get` returns before relying on any field name.
 
 ## Sub-workflows
 
-- `confluence_workflow_spaces` -- create, update, delete, archive, restore, or browse a space.
-- `confluence_workflow_content` -- create, update, delete, or browse pages/blog posts, their hierarchy and history.
-- `confluence_workflow_attachments` -- upload, list, update, delete, or move attachments on a page.
-- `confluence_workflow_labels` -- add, remove, or browse labels on content or spaces.
-- `confluence_workflow_properties` -- read or write arbitrary key/value metadata on content or spaces.
-- `confluence_workflow_permissions_restrictions` -- restrict a specific page/blog post, or grant a broader space/site permission.
-- `confluence_workflow_users_groups` -- manage users, groups, and group membership.
-- `confluence_workflow_search_cql` -- find content via CQL or general search.
-- `confluence_workflow_watches` -- check, add, or remove watch subscriptions on content or spaces.
-- `confluence_workflow_backup_restore` -- back up or restore a site or space's definitions.
-- `confluence_workflow_webhooks` -- create, test, or inspect webhooks.
-- `confluence_workflow_admin_diagnostics` -- reindexing, cluster status, audit records, and other operational signals.
-- `confluence_workflow_space_provisioning` -- set up a brand-new team space end-to-end: create, permission, categorize, seed content.
-- `confluence_workflow_user_lifecycle` -- onboard or offboard a user across accounts, groups, permissions, and watches.
+- `confluence-spaces` -- create, update, delete, archive, restore, or browse a space.
+- `confluence-content` -- create, update, delete, or browse pages/blog posts, their hierarchy and history.
+- `confluence-attachments` -- upload, list, update, delete, or move attachments on a page.
+- `confluence-labels` -- add, remove, or browse labels on content or spaces.
+- `confluence-properties` -- read or write arbitrary key/value metadata on content or spaces.
+- `confluence-permissions-restrictions` -- restrict a specific page/blog post, or grant a broader space/site permission.
+- `confluence-users-groups` -- manage users, groups, and group membership.
+- `confluence-search-cql` -- find content via CQL or general search.
+- `confluence-watches` -- check, add, or remove watch subscriptions on content or spaces.
+- `confluence-backup-restore` -- back up or restore a site or space's definitions.
+- `confluence-webhooks` -- create, test, or inspect webhooks.
+- `confluence-admin-diagnostics` -- reindexing, cluster status, audit records, and other operational signals.
+- `confluence-space-provisioning` -- set up a brand-new team space end-to-end: create, permission, categorize, seed content.
+- `confluence-user-lifecycle` -- onboard or offboard a user across accounts, groups, permissions, and watches.
 
 The last two are composite workflows that sequence several of the
 domain ones above in a specific order -- fetch them directly for a

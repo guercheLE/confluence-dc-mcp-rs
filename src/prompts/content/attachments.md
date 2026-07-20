@@ -8,7 +8,7 @@ Search for the capability in plain language (e.g. "search for how to
 upload an attachment to a page" or "search for how to move an attachment
 to a different piece of content") and read the schema `get` returns before
 calling -- attachment endpoints take the parent content's id as a path
-parameter, so confirm that id first (see `confluence_workflow_content` if
+parameter, so confirm that id first (see `confluence-content` if
 it isn't already known).
 
 **Gotchas worth checking before you call:**

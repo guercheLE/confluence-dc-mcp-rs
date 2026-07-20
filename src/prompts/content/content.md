@@ -1,7 +1,7 @@
 # Confluence workflow: pages, blog posts & content
 
 This sub-workflow is designed to be run as an isolated sub-task where
-possible -- if delegated here from `confluence_workflow`'s routing, or your
+possible -- if delegated here from `confluence`'s routing, or your
 environment otherwise supports it, everything you need is in this prompt's
 own text; report back only a short summary when done.
 
@@ -63,8 +63,8 @@ macro/markup rules that are easy to get subtly wrong by hand.
 ## Composing with other workflows
 
 Labels, comments-listing, properties, and restrictions on a piece of
-content are covered by `confluence_workflow_labels`,
-`confluence_workflow_properties`, and
-`confluence_workflow_permissions_restrictions` respectively -- fetch those
+content are covered by `confluence-labels`,
+`confluence-properties`, and
+`confluence-permissions-restrictions` respectively -- fetch those
 prompts by name rather than duplicating them here. Attachments are
-covered by `confluence_workflow_attachments`.
+covered by `confluence-attachments`.

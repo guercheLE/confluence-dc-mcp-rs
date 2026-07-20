@@ -28,25 +28,25 @@ calling LLM to stitch several domain prompts together unaided each time:
    real fork: regular vs. private vs. personal, decided once at creation
    and not cleanly changed after), then grant its initial permissions,
    categorize it, and optionally seed a home page -- spanning
-   `confluence_workflow_spaces`, `confluence_workflow_permissions_restrictions`,
-   `confluence_workflow_labels`, and `confluence_workflow_content`.
+   `confluence-spaces`, `confluence-permissions-restrictions`,
+   `confluence-labels`, and `confluence-content`.
 2. **Onboarding or offboarding a user** -- a real fork (which direction),
    each with its own ordered, gated steps: onboarding is check-then-create
    the account, add to the right group(s), grant space permissions, and
    optionally add a relevant watch; offboarding is disable (not delete,
    unless the user explicitly confirms otherwise) the account, remove
    group memberships, and explicitly revoke permissions (mindful of
-   `confluence_workflow_permissions_restrictions`' replace-all semantics)
-   -- spanning `confluence_workflow_users_groups`,
-   `confluence_workflow_permissions_restrictions`, and
-   `confluence_workflow_watches`.
+   `confluence-permissions-restrictions`' replace-all semantics)
+   -- spanning `confluence-users-groups`,
+   `confluence-permissions-restrictions`, and
+   `confluence-watches`.
 
 A third candidate considered and rejected as a standalone prompt: safely
 decommissioning a space (back up, then archive/trash). It doesn't have
 enough of its own sequencing logic beyond "back up first" to justify a
-whole new prompt -- instead, `confluence_workflow_spaces`' existing
+whole new prompt -- instead, `confluence-spaces`' existing
 gotcha list gets one added line cross-referencing
-`confluence_workflow_backup_restore` before a destructive space
+`confluence-backup-restore` before a destructive space
 operation, consistent with how every prompt already cross-references
 others rather than duplicating them.
 
@@ -66,8 +66,8 @@ tools) -- this plan also adds a "Workflows (MCP prompts)" section.
 
 | name | description | arguments |
 |---|---|---|
-| `confluence_workflow_space_provisioning` | Guided end-to-end setup of a new team space: create (regular/private/personal fork), grant initial permissions, categorize, optionally seed a home page. | `space_key`, `space_type` |
-| `confluence_workflow_user_lifecycle` | Onboard (check-then-create, group membership, permissions, watch) or offboard (disable, remove from groups, revoke permissions) a user -- an explicit fork on direction. | `username`, `lifecycle_stage`, `space_key` |
+| `confluence-space-provisioning` | Guided end-to-end setup of a new team space: create (regular/private/personal fork), grant initial permissions, categorize, optionally seed a home page. | `space_key`, `space_type` |
+| `confluence-user-lifecycle` | Onboard (check-then-create, group membership, permissions, watch) or offboard (disable, remove from groups, revoke permissions) a user -- an explicit fork on direction. | `username`, `lifecycle_stage`, `space_key` |
 
 Both are worked examples in the same 60-120 line band as
 `permissions_restrictions.md`/`backup_restore.md`: numbered steps, an
@@ -101,7 +101,7 @@ pub struct UserLifecycleArgs {
 - `src/prompts/content/user_lifecycle.md` (new)
 - `src/prompts/content/master.md` -- add both to the sub-workflow menu.
 - `src/prompts/content/spaces.md` -- one added gotcha line cross-referencing
-  `confluence_workflow_backup_restore` before archiving/trashing/deleting.
+  `confluence-backup-restore` before archiving/trashing/deleting.
 - `tests/prompts_workflow.rs` -- extend the expected 13-name list to 15;
   the existing per-prompt fetch-and-assert loop automatically covers both
   new prompts once they're in that list.
