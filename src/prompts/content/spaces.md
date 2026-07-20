@@ -19,6 +19,8 @@ this server supports.
 - Deleting a space is typically irreversible in a way trashing is not --
   confirm with the user before calling a delete rather than a trash/archive
   operation if there's any ambiguity.
+- Before archiving, trashing, or deleting a space that might still matter,
+  consider a backup first -- see `confluence_workflow_backup_restore`.
 
 After any create/update/delete, verify by re-fetching the space rather
 than trusting a non-error response alone.
@@ -27,4 +29,7 @@ Content within a space (pages, labels, permissions, properties) is covered
 by its own dedicated sub-workflow -- fetch `confluence_workflow_content`,
 `confluence_workflow_labels`, `confluence_workflow_permissions_restrictions`,
 or `confluence_workflow_properties` by name rather than duplicating that
-here.
+here. For setting up a brand-new team space end-to-end (create, permission,
+categorize, seed content in one guided flow), fetch
+`confluence_workflow_space_provisioning` instead of doing all of that
+manually.

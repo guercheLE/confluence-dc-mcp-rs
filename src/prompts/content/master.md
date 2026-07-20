@@ -34,6 +34,13 @@ schema `get` returns before relying on any field name.
 - `confluence_workflow_backup_restore` -- back up or restore a site or space's definitions.
 - `confluence_workflow_webhooks` -- create, test, or inspect webhooks.
 - `confluence_workflow_admin_diagnostics` -- reindexing, cluster status, audit records, and other operational signals.
+- `confluence_workflow_space_provisioning` -- set up a brand-new team space end-to-end: create, permission, categorize, seed content.
+- `confluence_workflow_user_lifecycle` -- onboard or offboard a user across accounts, groups, permissions, and watches.
+
+The last two are composite workflows that sequence several of the
+domain ones above in a specific order -- fetch them directly for a
+whole end-to-end task instead of stitching the domain prompts together
+yourself.
 
 If the user's goal doesn't clearly match one sub-workflow, ask a short
 clarifying question rather than guessing which one to fetch.

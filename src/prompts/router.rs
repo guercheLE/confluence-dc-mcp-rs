@@ -8,7 +8,8 @@ use rmcp::{prompt, prompt_router};
 
 use crate::core::mcp_server::McpifyServer;
 use crate::prompts::{
-    BackupRestoreArgs, MasterWorkflowArgs, PermissionsRestrictionsArgs, render_context_header,
+    BackupRestoreArgs, MasterWorkflowArgs, PermissionsRestrictionsArgs, SpaceProvisioningArgs,
+    UserLifecycleArgs, render_context_header,
 };
 
 #[prompt_router(vis = "pub(crate)")]
@@ -196,6 +197,50 @@ impl McpifyServer {
         vec![PromptMessage::new_text(
             Role::User,
             include_str!("content/admin_diagnostics.md"),
+        )]
+    }
+
+    #[prompt(
+        name = "confluence_workflow_space_provisioning",
+        description = "Guided end-to-end setup of a new team space: create (regular/private/\
+                        personal fork), grant initial permissions, categorize, optionally \
+                        seed a home page."
+    )]
+    async fn confluence_workflow_space_provisioning_prompt(
+        &self,
+        Parameters(args): Parameters<SpaceProvisioningArgs>,
+    ) -> Vec<PromptMessage> {
+        let header = render_context_header(&[
+            ("space_key", args.space_key.as_deref()),
+            ("space_type", args.space_type.as_deref()),
+        ]);
+        vec![PromptMessage::new_text(
+            Role::User,
+            format!(
+                "{header}\n\n{}",
+                include_str!("content/space_provisioning.md")
+            ),
+        )]
+    }
+
+    #[prompt(
+        name = "confluence_workflow_user_lifecycle",
+        description = "Onboard (check-then-create, group membership, permissions, watch) or \
+                        offboard (disable, remove from groups, revoke permissions) a user -- \
+                        an explicit fork on direction."
+    )]
+    async fn confluence_workflow_user_lifecycle_prompt(
+        &self,
+        Parameters(args): Parameters<UserLifecycleArgs>,
+    ) -> Vec<PromptMessage> {
+        let header = render_context_header(&[
+            ("username", args.username.as_deref()),
+            ("lifecycle_stage", args.lifecycle_stage.as_deref()),
+            ("space_key", args.space_key.as_deref()),
+        ]);
+        vec![PromptMessage::new_text(
+            Role::User,
+            format!("{header}\n\n{}", include_str!("content/user_lifecycle.md")),
         )]
     }
 }

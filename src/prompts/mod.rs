@@ -34,6 +34,24 @@ pub struct BackupRestoreArgs {
     pub space_key: Option<String>,
 }
 
+#[derive(Debug, Deserialize, schemars::JsonSchema)]
+pub struct SpaceProvisioningArgs {
+    /// The key for the new space, if already decided
+    pub space_key: Option<String>,
+    /// Whether the space is "regular", "private", or "personal"
+    pub space_type: Option<String>,
+}
+
+#[derive(Debug, Deserialize, schemars::JsonSchema)]
+pub struct UserLifecycleArgs {
+    /// The username of the account being onboarded or offboarded
+    pub username: Option<String>,
+    /// Whether this is "onboarding" or "offboarding"
+    pub lifecycle_stage: Option<String>,
+    /// The space key to grant or revoke permissions in, if known
+    pub space_key: Option<String>,
+}
+
 /// Renders a short "Context already provided" / "Still missing" header from
 /// whichever optional prompt arguments the caller already supplied, so a
 /// sub-workflow's numbered steps don't have to re-ask for values already

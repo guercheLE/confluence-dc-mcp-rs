@@ -54,7 +54,7 @@ async fn prompts_list_and_get_round_trip_over_the_wire() -> anyhow::Result<()> {
     });
     let client = TestClient.serve(client_transport).await?;
 
-    // `prompts/list` shape: all 13 confluence_workflow* prompts are advertised.
+    // `prompts/list` shape: all 15 confluence_workflow* prompts are advertised.
     let prompts = client.list_all_prompts().await?;
     let mut names: Vec<&str> = prompts.iter().map(|p| p.name.as_ref()).collect();
     names.sort_unstable();
@@ -69,7 +69,9 @@ async fn prompts_list_and_get_round_trip_over_the_wire() -> anyhow::Result<()> {
             "confluence_workflow_permissions_restrictions",
             "confluence_workflow_properties",
             "confluence_workflow_search_cql",
+            "confluence_workflow_space_provisioning",
             "confluence_workflow_spaces",
+            "confluence_workflow_user_lifecycle",
             "confluence_workflow_users_groups",
             "confluence_workflow_watches",
             "confluence_workflow_webhooks",
