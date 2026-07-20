@@ -137,6 +137,25 @@ async fn prompts_list_and_get_round_trip_over_the_wire() -> anyhow::Result<()> {
     assert!(restrictions_text.contains("`principal_type`"));
     assert!(restrictions_text.contains("`principal_name`"));
 
+    // Every advertised prompt must actually be fetchable with no arguments
+    // (every argument is optional by design -- see the plan's rationale) and
+    // return non-empty instructional content. This also exercises every
+    // sub-workflow's own `#[prompt]` method, not just the two above.
+    for name in &names {
+        let result = client
+            .get_prompt(GetPromptRequestParams::new(*name))
+            .await
+            .unwrap_or_else(|e| panic!("prompts/get for `{name}` should succeed, got {e}"));
+        assert!(
+            !result.messages.is_empty(),
+            "`{name}` should return at least one message"
+        );
+        assert!(
+            !message_text(&result.messages[0]).is_empty(),
+            "`{name}`'s message text should not be empty"
+        );
+    }
+
     drop(client);
     tokio::time::timeout(std::time::Duration::from_secs(2), server_task).await???;
     Ok(())
