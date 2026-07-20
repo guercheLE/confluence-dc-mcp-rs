@@ -100,10 +100,7 @@ mod tests {
 
     #[test]
     fn mixed_supplied_and_missing_splits_correctly() {
-        let header = render_context_header(&[
-            ("content_id", Some("123456")),
-            ("space_key", None),
-        ]);
+        let header = render_context_header(&[("content_id", Some("123456")), ("space_key", None)]);
         assert!(header.contains("`content_id`: 123456"));
         assert!(header.contains("Still missing"));
         assert!(header.contains("`space_key`"));

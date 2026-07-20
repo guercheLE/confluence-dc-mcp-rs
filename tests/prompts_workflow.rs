@@ -79,7 +79,9 @@ async fn prompts_list_and_get_round_trip_over_the_wire() -> anyhow::Result<()> {
     };
     assert_eq!(names, expected);
     assert!(
-        names.iter().all(|name| name.starts_with("confluence_workflow")),
+        names
+            .iter()
+            .all(|name| name.starts_with("confluence_workflow")),
         "every advertised prompt should share the confluence_workflow* prefix, got {names:?}"
     );
 
@@ -91,7 +93,12 @@ async fn prompts_list_and_get_round_trip_over_the_wire() -> anyhow::Result<()> {
         .arguments
         .as_ref()
         .expect("should advertise arguments");
-    for expected in ["content_id", "space_key", "principal_type", "principal_name"] {
+    for expected in [
+        "content_id",
+        "space_key",
+        "principal_type",
+        "principal_name",
+    ] {
         let arg = arguments
             .iter()
             .find(|a| a.name == expected)
